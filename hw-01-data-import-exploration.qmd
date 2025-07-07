@@ -1,0 +1,137 @@
+---
+title: "Final Practice"
+subtitle: "Section 01"
+format:
+  html:
+    embed-resources: true
+execute: 
+  echo: true
+  warning: false
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+# Task 1.0
+
+1.  Use the `read_csv()` and `here()` functions to import the following two CSV files from the "wk-06/data/what_a_waste/" directory:
+
+-   `what-a-waste-city-level-data.csv`, and assign to the object `city_data`
+-   `what-a-waste-city-level-data-distance.csv`, and assign to the object `distance`
+
+```{r}
+city_data <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data.csv"))
+distance <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-distance.csv"))
+```
+
+# Task 1.1
+
+The data that is used for these exercises are subsets of data from the [What a Waste Global Database maintained by the World Bank](https://datacatalog.worldbank.org/search/dataset/00395971).
+
+1.  Use functions you have learned in the course to explore the data the `city_data` object.
+
+2.  Describe the variables
+
+3.  Describe the observations
+
+# Task 1.2
+
+1.  Start with the `city_data` object and use the `select()` function to create a subset that only keeps the following variables:
+
+-   city
+-   income_id
+-   all variables that start with "waste"
+
+```{r}
+city_data |> 
+  select(city, income_id, starts_with("waste"))
+```
+
+# Task 1.3
+
+1.  Start with the `city_data` object and use the `select()` function to create a subset that only keeps the following variables:
+
+-   city
+-   income_id
+-   all variables that contain the word string "distance"
+-   not transportation_distance_na
+
+```{r}
+city_data |>
+  select(city, income_id, contains("distance"), -transportation_distance_na)
+```
+
+# Task 1.4
+
+1.  Start with the `distance` object and use a function of your choice to create a subset that removes NAs from the variable which stores values for the total transporation distance in km/year.
+
+2.  Store the subset as a new object in your environment with the name `distance_complete`
+
+```{r}
+distance_complete <- distance |> 
+  filter(!is.na(transportation_distance_total_km_year))
+```
+
+# Task 1.5
+
+1.  Start with the `distance_complete` object and use the `arrange()` function to display the 'transporation_distance_disposal_site' variable in descending order.
+
+```{r}
+distance_complete |> 
+  arrange(desc(transporation_distance_disposal_site))
+```
+
+# Task 1.6
+
+1.  Use the `mutate()` function to add a new column to `distance_complete` that is the number of trips per day. Name the column `trips_day`.
+
+2.  Use the pipe operator to add another line of code which uses the `mutate()` function to add a new column that is the number of trips per 1000 people and day. Name the column `trips_1000_ppl_day`.
+
+3.  Store the result as a new object in your environment with the name `distance_complete_extended`
+
+```{r}
+distance_complete_extended <- distance_complete |> 
+  mutate(trips_day = transportation_distance_total_km_year / transporation_distance_disposal_site / 365) |>
+  mutate(trips_1000_ppl_day = trips_day / pop * 1000)
+```
+
+# Task 1.7
+
+1.  Use the `filter()` function to create a subset from `distance_complete_extended` containing observations for cities where the number of trips per 1000 people and day is between 1 (inclusive) and 2 (not inclusive).
+
+```{r}
+distance_complete_extended |> 
+  filter(trips_1000_ppl_day >= 1 & trips_1000_ppl_day < 2)
+```
+
+# Task 1.8
+
+1.  Edit the YAML header to add your name to be displayed as the author of this document in the rendered file.
+2.  Edit the YAML header with options to display a table of contents in the rendered file.
+3.  Edit the YAML header to not display warnings in the rendered file.
+
+# Task 1.9: Complete assignment
+
+## Stage, Commit & Push to GitHub
+
+1.  Open the Git pane in RStudio. It's in the top right corner in a separate tab.
+2.  **Stage** your changes by checking appropriate box next to all files (if you select one file with your mouse, you can then highlight them all with Ctrl + A on your keyboard and check all boxes)
+3.  Write a meaningful commit message (e.g. "Completed week 6 homework section 1") in the **Commit message** box
+4.  Click **Commit**. Note that every commit needs to have a commit message associated with it.
+5.  Click **Push** to send your changes to GitHub.
+6.  Go to your wk-06-USERNAME GitHub repo (where USERNAME is your GitHub username) and refresh the page. You should see your commit message next to the updated files.
+
+## Open an issue on GitHub
+
+Once you have ensured that the Quarto document renders without errors and you have pushed all your changes to GitHub, it is to complete the assignment by opening an issue on your wk-06-USERNAME GitHub repo (where USERNAME is your GitHub username).
+
+1.  Navigate to your wk-06-USERNAME GitHub repo (where USERNAME is your GitHub username).
+2.  Click on **Issues**, and then **New issue** button.
+3.  Write a meaningful title in the **Title** field
+4.  Tag the course instructor with using the `@` sign in combination with `larnsce` as the username
+5.  Add any questions or comments

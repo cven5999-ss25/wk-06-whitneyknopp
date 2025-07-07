@@ -1,0 +1,92 @@
+---
+title: "Final Practice"
+subtitle: "Section 03"
+format:
+  html:
+    embed-resources: true
+editor: visual
+execute: 
+  echo: true
+  warning: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+
+treatment <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-treatment.csv"))
+
+```
+
+# Task 3.1
+
+1.  Starting with the `treatment` data object, use functions taught during the course to answer the following question:
+
+How many cities are covered in this dataset?
+
+```{r}
+
+
+
+```
+
+# Task 3.2
+
+1.  Starting with the `treatment` data object, use functions taught during the course to answer the following question:
+
+In how many cities is all waste (100%) openly dumped?
+
+```{r}
+
+
+```
+
+# Task 3.3
+
+1.  Starting with the `treatment` data object, use functions taught during the course to answer the following question:
+
+How many cities in which no waste (0%) is recycled fall into each income category?
+
+```{r}
+
+
+
+```
+
+# Task 3.4
+
+1.  Starting with the `treatment` data object, use functions taught during the course to answer the following question:
+
+What is the mean, median, and standard deviation of treatment percentages for each waste treatment option and grouped by income?
+
+```{r}
+
+
+
+```
+
+# Task 3.5: Complete assignment
+
+## Stage, Commit & Push to GitHub
+
+1.  Open the Git pane in RStudio. It's in the top right corner in a separate tab.
+2.  **Stage** your changes by checking appropriate box next to all files (if you select one file with your mouse, you can then highlight them all with Ctrl + A on your keyboard and check all boxes)
+3.  Write a meaningful commit message (e.g. "Completed week 6 homework section 3") in the **Commit message** box
+4.  Click **Commit**. Note that every commit needs to have a commit message associated with it.
+5.  Click **Push** to send your changes to GitHub.
+6.  Go to your wk-06-USERNAME GitHub repo (where USERNAME is your GitHub username) and refresh the page. You should see your commit message next to the updated files.
+
+## Open an issue on GitHub
+
+Once you have ensured that the Quarto document renders without errors and you have pushed all your changes to GitHub, it is to complete the assignment by opening an issue on your wk-06-USERNAME GitHub repo (where USERNAME is your GitHub username).
+
+1.  Navigate to your wk-06-USERNAME GitHub repo (where USERNAME is your GitHub username).
+2.  Click on **Issues**, and then **New issue** button.
+3.  Write a meaningful title in the **Title** field
+4.  Tag the course instructor with using the `@` sign in combination with `larnsce` as the username
+5.  Add any questions or comments

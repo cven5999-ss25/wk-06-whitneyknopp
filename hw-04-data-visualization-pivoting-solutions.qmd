@@ -1,0 +1,99 @@
+---
+title: "Final Practice"
+subtitle: "Section 04"
+format:
+  html:
+    embed-resources: true
+editor: visual
+execute: 
+  echo: true
+  warning: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+
+treatment_mean <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-treatment-mean.csv"))
+
+```
+
+# Task 4.1
+
+1.  Starting with the `treatment_mean` data object, use functions taught during the course to complete the following task:
+
+Reproduce the table that you see as an image below when you render the report and view the output in your Viewer tab in the bottom right window.
+
+```{r}
+
+treatment_mean %>% 
+  pivot_wider(names_from = income_id, 
+              values_from = mean) |> 
+  knitr::kable(digits = 1)
+
+```
+
+![](img/tbl-01-treatment-by-income-mean.png)
+
+# Task 4.2
+
+1.  Starting with the `treatment_mean` data object, use functions taught during the course to complete the following task:
+
+Reproduce the plot that you see as an image below when you render the report and view the output in your Viewer tab in the bottom right window.
+
+**Hints:**
+
+-   The color palette is for qualitative data types and is called "Paired". It is originally derived from from https://colorbrewer2.org/
+
+-   Wondering about the order of the 4 individual plots? Remember how we create factors?
+
+```{r}
+
+income_fct_level <- c("LIC", "LMC", "UMC", "HIC") 
+
+treatment_mean_fct <- treatment_mean |> 
+  mutate(income_id = factor(income_id, levels = income_fct_level))  
+
+ggplot(data = treatment_mean_fct,
+       mapping = aes(x = waste_treatment, y = mean, fill = waste_treatment)) + 
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Waste Treatment", 
+       subtitle = "Mean percentages for countries by income regions", 
+       x = "mean (percent)", 
+       y = NULL) + 
+  scale_fill_brewer(type = "qual", palette = "Paired") +
+  scale_y_continuous(breaks = seq(0, 40, 5)) +
+  facet_wrap(~income_id) +
+  theme(legend.position = "none") 
+
+
+
+```
+
+![](img/fig-01-treatment-by-income-mean.png)
+
+# Task 4.3: Complete assignment
+
+## Stage, Commit & Push to GitHub
+
+1.  Open the Git pane in RStudio. It's in the top right corner in a separate tab.
+2.  **Stage** your changes by checking appropriate box next to all files (if you select one file with your mouse, you can then highlight them all with Ctrl + A on your keyboard and check all boxes)
+3.  Write a meaningful commit message (e.g. "Completed homework assignment 1b) in the **Commit message** box
+4.  Click **Commit**. Note that every commit needs to have a commit message associated with it.
+5.  Go to your course-material GitHub repo and refresh the page. You should see your commit message next to the updated files.
+
+## Open an issue on GitHub
+
+Once you have ensured that the Quarto document renders without errors and you have pushed all your changes to GitHub, it is to complete the assignment by opening an issue on your course-material GitHub repo.
+
+1.  Navigate to your course-material GitHub repo.
+2.  Click on **Issues**, and then **New issue** button.
+3.  Write a meaningful title in the **Title** field
+4.  Tag the course instructor with using the `@` sign in combination with `larnsce` as the username
+5.  Add any questions or comments

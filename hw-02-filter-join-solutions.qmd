@@ -1,0 +1,140 @@
+---
+title: "Final Practice"
+subtitle: "Section 02"
+format:
+  html:
+    embed-resources: true
+editor: visual
+execute: 
+  echo: true
+  warning: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+generation <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-generation.csv"))
+
+population <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-population.csv"))
+
+country_income <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-country-income.csv"))
+```
+
+# Task 2.1
+
+**Write the code yourself**
+
+1.  Use the `filter()` function to remove all NAs from the `generation` data object.
+
+2.  Store the result as a new object in your environment with the name `generation_complete`.
+
+```{r}
+
+
+
+```
+
+# Task 2.2
+
+**Write the code yourself**
+
+1.  How many cities have data for the `pop` variable in the `population` data object? Write code to answer this question.
+
+2.  Starting with the `generation_complete` data object, use the `left_join()` function to join with the `population` data object.
+
+3.  Why does the resulting data object have data for 326 countries and not for the identified number of countries with population data in Point 1?
+
+4.  Store the result as a new object in your environment with the name `generation_joined`.
+
+```{r}
+
+
+```
+
+# Task 2.3
+
+**Write the code yourself**
+
+1.  Use the `mutate()` function to add a new column to `generation_joined` that is the municipal solid waste generation per capita in kg/year. Name the column `msw_generation_capita_kg_year`.
+
+2.  Use the pipe operator to add another line of code which uses the `relocate()` function to move the `msw_generation_capita_kg_year` after the `city` column.
+
+3.  Use the pipe operator to add another line of code which uses the `select()` function to remove the `msw_generation_tons_year` column.
+
+4.  Store the result as a new object in your environment with the name `generation_capita`.
+
+```{r}
+
+```
+
+# Task 2.4
+
+**Write the code yourself**
+
+1.  Starting with `generation_capita`, use a function of the slice family of functions to return the 5 countries with the highest municipal solid waste generation.
+
+2.  Use the pipe operator to add another line of code, then use a function you have learnt in the course to display a formatted version of the returned dataframe from the previous step.
+
+```{r}
+
+
+```
+
+# Task 2.5
+
+**Write the code yourself**
+
+1.  Use the data stored in `generation_country_income` to prepare a box- and jitterplot that displays income on the x-axis and municipal solid waste generation on the y-axis.
+
+2.  Add a color aesthetic for the income categories and use the `theme()` function to remove the legend from the plot.
+
+3.  Set the width of the jitter to a value of 0.2.
+
+4.  Set the transparency for the points in the jitter to a value of 0.75.
+
+5.  Set the size of the points in the jitter to a value of 2.
+
+6.  Do not display the outliers for the boxplot.
+
+7.  Change the color palette to colors of your choice.
+
+```{r}
+
+generation_country_income <- read_rds(here("data/what_a_waste/what-a-waste-city-level-data-country-income.rds"))
+
+ggplot(data = generation_country_income,
+       mapping = aes(x = income_id, 
+                     y = msw_generation_capita_kg_year, 
+                     color = income_id)) + 
+  geom_boxplot(outlier.shape = NA) + 
+  geom_jitter(width =  0.2, alpha = 0.75, size = 2) + 
+  scale_colour_brewer(type = "qual", palette = "Paired") + 
+  theme(legend.position = "none") 
+
+
+```
+
+# Task 2.6: Complete assignment
+
+## Stage, Commit & Push to GitHub
+
+1.  Open the Git pane in RStudio. It's in the top right corner in a separate tab.
+2.  **Stage** your changes by checking appropriate box next to all files (if you select one file with your mouse, you can then highlight them all with Ctrl + A on your keyboard and check all boxes)
+3.  Write a meaningful commit message (e.g. "Completed homework assignment 1b) in the **Commit message** box
+4.  Click **Commit**. Note that every commit needs to have a commit message associated with it.
+5.  Go to your course-material GitHub repo and refresh the page. You should see your commit message next to the updated files.
+
+## Open an issue on GitHub
+
+Once you have ensured that the Quarto document renders without errors and you have pushed all your changes to GitHub, it is to complete the assignment by opening an issue on your course-material GitHub repo.
+
+1.  Navigate to your course-material GitHub repo.
+2.  Click on **Issues**, and then **New issue** button.
+3.  Write a meaningful title in the **Title** field
+4.  Tag the course instructor with using the `@` sign in combination with `larnsce` as the username
+5.  Add any questions or comments
