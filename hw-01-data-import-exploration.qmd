@@ -1,18 +1,22 @@
 ---
 title: "Final Practice"
 subtitle: "Section 01"
+author: "Whitney Knopp"
+date: "07/09/25"
 format:
   html:
     embed-resources: true
 execute: 
   echo: true
   warning: false
+toc: true
 editor: visual
 editor_options: 
   chunk_output_type: console
 ---
 
 ```{r}
+#| label: load-packages
 library(tidyverse)
 library(here)
 ```
@@ -23,6 +27,13 @@ library(here)
 
 -   `what-a-waste-city-level-data.csv`, and assign to the object `city_data`
 -   `what-a-waste-city-level-data-distance.csv`, and assign to the object `distance`
+
+```{r}
+#| label: load-data
+
+city_data <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data.csv"))
+distance <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-distance.csv"))
+```
 
 ```{r}
 city_data <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data.csv"))
@@ -37,7 +48,36 @@ The data that is used for these exercises are subsets of data from the [What a W
 
 2.  Describe the variables
 
+    There are 31 variables in the `city_data` object. They include character variables of the city, country and income_id as well as numerical variables (double) that quantify population, waste generated type/percentage of treatment (total of 12 variables about treatment), the composition of the waste (9 variables) and transportation of the waste (4 variables)
+
 3.  Describe the observations
+
+    There are 367 observations. The data is organized by city, where there is one observation for each city.
+
+```{r}
+#| label: explore-data
+
+# view the first 6 rows of the data set
+head(city_data)
+
+# investigate columns about waste treatment
+city_data |> 
+  select(starts_with("waste_treatment"))
+
+# investigate columns about composition
+city_data |> 
+  select(starts_with("composition"))
+
+# investigate columns about transportation
+city_data |> 
+  select(starts_with("transportation"))
+
+# count columns and categorize observations by city
+nrow(city_data)
+city_data |> 
+  count(unique(city))
+
+```
 
 # Task 1.2
 
@@ -46,6 +86,14 @@ The data that is used for these exercises are subsets of data from the [What a W
 -   city
 -   income_id
 -   all variables that start with "waste"
+
+```{r}
+#| label: subset-data
+
+city_data |> 
+  select(city, income_id, starts_with("waste"))
+
+```
 
 ```{r}
 city_data |> 
@@ -62,6 +110,14 @@ city_data |>
 -   not transportation_distance_na
 
 ```{r}
+#| label: more-subsetting
+
+city_data |> 
+  select(city, income_id, contains("distance"), -transportation_distance_na)
+
+```
+
+```{r}
 city_data |>
   select(city, income_id, contains("distance"), -transportation_distance_na)
 ```
@@ -73,6 +129,14 @@ city_data |>
 2.  Store the subset as a new object in your environment with the name `distance_complete`
 
 ```{r}
+#| lable: dist-complete
+
+distance_complete <- distance |> 
+  filter(!is.na(transportation_distance_total_km_year))
+
+```
+
+```{r}
 distance_complete <- distance |> 
   filter(!is.na(transportation_distance_total_km_year))
 ```
@@ -80,6 +144,13 @@ distance_complete <- distance |>
 # Task 1.5
 
 1.  Start with the `distance_complete` object and use the `arrange()` function to display the 'transporation_distance_disposal_site' variable in descending order.
+
+```{r}
+#| label: arrange-dist-complete
+
+distance_complete |> 
+  arrange(desc(transporation_distance_disposal_site))
+```
 
 ```{r}
 distance_complete |> 
@@ -95,6 +166,15 @@ distance_complete |>
 3.  Store the result as a new object in your environment with the name `distance_complete_extended`
 
 ```{r}
+#| label: trips-day
+
+distance_complete_extended <- distance_complete |> 
+  mutate(trips_day = transportation_distance_total_km_year / transporation_distance_disposal_site / 365) |> 
+  mutate(trips_1000_ppl_day = trips_day / pop * 1000)
+
+```
+
+```{r}
 distance_complete_extended <- distance_complete |> 
   mutate(trips_day = transportation_distance_total_km_year / transporation_distance_disposal_site / 365) |>
   mutate(trips_1000_ppl_day = trips_day / pop * 1000)
@@ -103,6 +183,14 @@ distance_complete_extended <- distance_complete |>
 # Task 1.7
 
 1.  Use the `filter()` function to create a subset from `distance_complete_extended` containing observations for cities where the number of trips per 1000 people and day is between 1 (inclusive) and 2 (not inclusive).
+
+```{r}
+#| label: subset-dist-complete-ext
+
+distance_complete_extended |> 
+  filter(1 <= trips_1000_ppl_day, trips_1000_ppl_day < 2)
+
+```
 
 ```{r}
 distance_complete_extended |> 
