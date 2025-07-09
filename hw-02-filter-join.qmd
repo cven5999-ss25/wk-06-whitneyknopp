@@ -1,10 +1,13 @@
 ---
 title: "Final Practice"
 subtitle: "Section 02"
+author: "Whitney Knopp"
+date: "07/09/25"
 format:
   html:
     embed-resources: true
 editor: visual
+toc: true
 execute: 
   echo: true
   warning: false
@@ -32,6 +35,16 @@ country_income <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-
 2.  Store the result as a new object in your environment with the name `generation_complete`.
 
 ```{r}
+#| label: filter-na
+
+head(generation)
+
+generation_complete <- generation |> 
+  filter(!is.na(msw_generation_tons_year))
+
+```
+
+```{r}
 generation_complete <- generation |>
   filter(!is.na(msw_generation_tons_year))
 ```
@@ -40,11 +53,28 @@ generation_complete <- generation |>
 
 1.  How many cities have data for the `pop` variable in the `population` data object? Write code to answer this question.
 
+    Every city, n = 357, have data for population.
+
 2.  Starting with the `generation_complete` data object, use the `left_join()` function to join with the `population` data object.
 
 3.  Why does the resulting data object have data for 326 countries and not for the identified number of countries with population data in Point 1?
 
+    This is because we used the `left_join()` function, which keeps all the rows in `generation` (the x data frame) and matches `pop` entries by city from the population data frame (the y)
+
 4.  Store the result as a new object in your environment with the name `generation_joined`.
+
+```{r}
+#| label: answer-questions
+
+# code for question 1
+population |> 
+  filter(!is.na(pop)) |> 
+  summarize(count = n())
+
+# code for question 2
+generation_joined <- generation_complete |> 
+  left_join(population, by = "city")
+```
 
 ```{r}
 # Answer to question 1
@@ -72,6 +102,16 @@ generation_joined <- generation_complete |>
 4.  Store the result as a new object in your environment with the name `generation_capita`.
 
 ```{r}
+#| label: generation-capita
+
+generation_capita <- generation_joined |>
+  mutate(msw_generation_capita_kg_year = msw_generation_tons_year / pop * 1000 ) |> 
+  relocate(msw_generation_capita_kg_year, .after = city) |> 
+  select(-msw_generation_tons_year)
+
+```
+
+```{r}
 generation_capita <- generation_joined |>
   mutate(msw_generation_capita_kg_year = (msw_generation_tons_year * 1000) / pop) |>
   relocate(msw_generation_capita_kg_year, .after = city) |>
@@ -83,6 +123,14 @@ generation_capita <- generation_joined |>
 1.  Starting with `generation_capita`, use a function of the slice family of functions to return the 5 countries with the highest municipal solid waste generation.
 
 2.  Use the pipe operator to add another line of code, then use a function you have learnt in the course to display a formatted version of the returned dataframe from the previous step.
+
+```{r}
+#| label: max-waste-gen-countries
+
+generation_capita |> 
+  slice_max(msw_generation_capita_kg_year, n = 5) |> 
+  knitr::kable()
+```
 
 ```{r}
 generation_capita |>
@@ -105,6 +153,27 @@ generation_capita |>
 6.  Do not display the outliers for the boxplot.
 
 7.  Change the color palette to colors of your choice.
+
+```{r}
+#| label: boxplot-generation
+
+# load the data
+generation_country_income <- read_rds(here("data/what_a_waste/what-a-waste-city-level-data-country-income.rds"))
+
+
+ggplot(data = generation_country_income,
+         mapping = aes(x = income_id,
+                       y = msw_generation_capita_kg_year,
+                       color = income_id)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.2, 
+              alpha = 0.75,
+              size = 2) +
+  scale_color_brewer(palette = "Accent") +
+  theme_minimal() + 
+  theme(legend.position = "none")
+
+```
 
 ```{r}
 generation_country_income <- read_rds(here("data/what_a_waste/what-a-waste-city-level-data-country-income.rds"))
