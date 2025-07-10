@@ -1,10 +1,12 @@
 ---
 title: "Final Practice"
 subtitle: "Section 03"
+name: "Whitney Knopp"
 format:
   html:
     embed-resources: true
 editor: visual
+toc: true
 execute: 
   echo: true
   warning: false
@@ -18,7 +20,7 @@ library(here)
 ```
 
 ```{r}
-
+# read in data
 treatment <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-treatment.csv"))
 
 ```
@@ -29,9 +31,17 @@ treatment <- read_csv(here("data/what_a_waste/what-a-waste-city-level-data-treat
 
 How many cities are covered in this dataset?
 
+There are 199 cities covered in this dataset.
+
 ```{r}
+#| label: task-3.1
 
-
+# use the pivot_wider function to condense observations by city
+treatment |> 
+  pivot_wider(names_from = waste_treatment,
+              values_from = percent) |> 
+  summarize(number_of_cities = n()) |> 
+  knitr::kable()
 
 ```
 
@@ -41,8 +51,17 @@ How many cities are covered in this dataset?
 
 In how many cities is all waste (100%) openly dumped?
 
-```{r}
+There are 27 cities where all waste, 100%, is openly dumped.
 
+```{r}
+#| label: task-3.2
+
+treatment |> 
+  pivot_wider(names_from = waste_treatment,
+              values_from = percent) |> 
+  filter(open_dump == 100) |> 
+  summarize(cities_open_dump_100 = n()) |> 
+  knitr::kable()
 
 ```
 
@@ -52,9 +71,21 @@ In how many cities is all waste (100%) openly dumped?
 
 How many cities in which no waste (0%) is recycled fall into each income category?
 
+The table below presents the cities where no waste is recycled, organized by income category.
+
 ```{r}
+#| label: task-3.3
 
-
+income_levels <- c("LIC", "LMC", "UMC", "HIC")
+treatment |> 
+  mutate(income_id = factor(income_id, levels = income_levels)) |> 
+  pivot_wider(names_from = waste_treatment,
+              values_from = percent) |> 
+  group_by(income_id) |> 
+  filter(recycling == 0) |> 
+  arrange(income_id) |> 
+  summarize(number_of_cities_no_recycling = n()) |> 
+  knitr::kable()
 
 ```
 
@@ -65,9 +96,26 @@ How many cities in which no waste (0%) is recycled fall into each income categor
 What is the mean, median, and standard deviation of treatment percentages for each waste treatment option and grouped by income?
 
 ```{r}
+#| label: task-3.4
 
+# for a long format
+treatment|> 
+  group_by(income_id, waste_treatment) |> 
+  summarize(mean = mean(percent, na.rm = TRUE),
+            median = median(percent, na.rm = TRUE),
+            std_dev = sd(percent, na.rm = TRUE)) |> 
+  knitr::kable()
 
-
+# for a wider format
+treatment|> 
+  group_by(income_id, waste_treatment) |> 
+  summarize(mean = mean(percent, na.rm = TRUE),
+            median = median(percent, na.rm = TRUE),
+            std_dev = sd(percent, na.rm = TRUE)) |> 
+  pivot_wider(names_from = waste_treatment,
+              values_from = c("mean", "median", "std_dev")) |> 
+  knitr::kable()
+  
 ```
 
 # Task 3.5: Complete assignment
