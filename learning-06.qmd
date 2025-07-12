@@ -13,11 +13,11 @@ Learning reflections are part of your weekly homework and have a weight of 20% o
 
 # Lecture
 
-<!--# Add your reflections on the lecture of this week here -->
+I wanted to say thank you so much for all of your support during class. I truly admire your patience and interest in teaching data science. I hope to be able to take another one of your classes in the future!
 
 # Homework Assignment
 
-<!--# Add your reflections on the homework programming assignment here -->
+I thought the homework assignments this week were a good starting practice for using programming and data in the real world. I still find it challenging to start with a file or data set and understand what steps I should take for it to be meaningful. The guidance provided in the homework gives good structure to continue practicing. Using the data science life cycle is beneficial in this regard. I think in general I am very proud of how much I have learned thus far, I am excited to continue pursuing some of the organization and version control methods I have learned during this class in my PhD and future work.
 
 # Readings
 
